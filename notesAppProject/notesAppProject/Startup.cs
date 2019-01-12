@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StaticHttpContextAccessor.Helpers;
 
 namespace notesAppProject
 {
@@ -31,6 +32,10 @@ namespace notesAppProject
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSession();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<SessionHandler>();
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -51,6 +56,8 @@ namespace notesAppProject
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            StaticHttpContextAccessor.Helpers.AppContext.Configure(app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
 
             app.UseMvc(routes =>
             {
