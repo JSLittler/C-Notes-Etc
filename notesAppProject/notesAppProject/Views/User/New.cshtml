@@ -9,10 +9,48 @@
 
     <form action="Create" method="post">
         <div class="pt-2 pb-1">
-            <input type="text" name="username" required="" autofocus="" placeholder="Username" class="form-control form-input" />
+            <p>Enter a username:</p>
+            <input type="text" name="Username" required="" autofocus="" placeholder="Username" class="form-control form-input"/>
         </div>
         <div class="pt-2 pb-1">
-            <input type="password" name="password" required="" placeholder="Password" class="form-control form-input" />
+            <p>Enter your e-mail address:</p>
+            <input type="email" name="EmailAddress" required="" placeholder="E-mail Address" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Enter a password:</p>
+            <input type="password" name="Password" required="" placeholder="Password" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Enter your first name:</p>
+            <input type="text" name="FirstName" required="" placeholder="First Name" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Enter your  last name:</p>
+            <input type="text" name="LastName" required="" placeholder="Last Name" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Enter your house number and street address:</p>
+            <input type="text" name="StreetAddress" required="" placeholder="House Number and Street Address" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Enter your postal town</p>
+            <input type="text" name="PostalTown" required="" placeholder="Postal Town" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Enter your postcode:</p>
+            <input type="text" name="PostCode" required="" placeholder="Post Code" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access your local weather:</p>
+            <input type="checkbox" name="PermissionWeatherApp" required="" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access news stories:</p>
+            <input type="checkbox" name="PermissionNewsApp" required="" class="form-control form-input" />
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access your radio stations:</p>
+            <input type="checkbox" name="PermissionRadioApp" required="" class="form-control form-input" />
         </div>
         <div class="pt-2 pb-1">
             <button type="submit" class="btn btn-outline-info form-submit">Register</button>

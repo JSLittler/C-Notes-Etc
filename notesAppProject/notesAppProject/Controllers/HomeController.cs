@@ -11,7 +11,7 @@ namespace notesAppProject.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly DungeonsAndDragonsContext _context;
+        //private readonly notesAppProject _context;
         private readonly SessionHandler _sessionHandler;
 
         public HomeController(SessionHandler sessionHandler)
