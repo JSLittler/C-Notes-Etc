@@ -65,7 +65,7 @@ using notesAppProject.Models;
             WriteLiteral("\r\n<div class=\"text-center\">\r\n    <h1>Sign In</h1>\r\n\r\n    <hr />\r\n\r\n    ");
             EndContext();
             BeginContext(116, 548, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "852bb1ecbb294af2b51a581bb668776f", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "24443c699f404522a2d17bfb80dd7c3b", async() => {
                 BeginContext(158, 499, true);
                 WriteLiteral(@"
         <div class=""pt-2 pb-1"">
