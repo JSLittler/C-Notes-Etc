@@ -5,3 +5,24 @@
 
 <h3 class="username" aria-pressed="true">@ViewBag.Username's   Dashboard <a href="/NotesApp/SignOut" class="btn btn-outline-info homebutton" role="button" aria-pressed="true">Sign Out</a></h3>
 
+
+<style type ="text/css">
+    .row {
+        width: 100%
+    }
+     .column {
+         background: lightblue;
+         width: 45%;
+         text-align: center;
+         margin: 10px;
+     }
+</style>
+<div class="row">
+    <div class="column" >@ViewBag.Username's Notes App</div>
+    <div class="column" >@ViewBag.Username's News App</div>
+</div>
+
+<div class="row">
+    <div class="column">@ViewBag.Username's Weather App</div>
+    <div class="column">@ViewBag.Username's Radio App</div>
+</div>
