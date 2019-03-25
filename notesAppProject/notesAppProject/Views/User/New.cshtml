@@ -2,7 +2,7 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="text-center">
+<div class="align-left" margin-left=100px>
     <h1>Register</h1>
 
     <hr />
@@ -41,16 +41,18 @@
             <input type="text" name="PostCode" required="" placeholder="Post Code" class="form-control form-input" />
         </div>
         <div class="pt-2 pb-1">
-            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access your local weather:</p>
-            <input type="checkbox" name="PermissionWeatherApp" required="" class="form-control form-input" />
+            <P></P>
+            <p>Permissions</p>
+            <p></p>
         </div>
         <div class="pt-2 pb-1">
-            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access news stories:</p>
-            <input type="checkbox" name="PermissionNewsApp" required="" class="form-control form-input" />
+            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access your local weather: <input type="checkbox" name="PermissionWeatherApp" required="" class="form-control form-input" /> </p>
         </div>
         <div class="pt-2 pb-1">
-            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access your radio stations:</p>
-            <input type="checkbox" name="PermissionRadioApp" required="" class="form-control form-input" />
+            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access news stories: <input type="checkbox" name="PermissionNewsApp" required="" class="form-control form-input" /> </p>
+        </div>
+        <div class="pt-2 pb-1">
+            <p>Tick to confirm that your details can be shared with (api-provider) so that you can access your radio stations: <input type="checkbox" name="PermissionRadioApp" required="" class="form-control form-input" /> </p>
         </div>
         <div class="pt-2 pb-1">
             <button type="submit" class="btn btn-outline-info form-submit">Register</button>

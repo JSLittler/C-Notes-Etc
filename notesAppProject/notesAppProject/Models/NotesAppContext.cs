@@ -6,8 +6,13 @@ using MongoDB.Driver.Core.Authentication;
 namespace notesAppProject.Models
 {
     public class NotesAppContext
-//    {
-//        public User<User> users { get; set; }
-//        public Note<Note> games { get; set; }
-//    }
+    {
+        public static User User { get; set; }
+        public Note Note  { get; set; }
+
+        public static void Set(User user)
+        {
+            NotesAppContext.User = user;
+        }
+    }
 }

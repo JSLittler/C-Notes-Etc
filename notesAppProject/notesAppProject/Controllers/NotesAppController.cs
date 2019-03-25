@@ -24,13 +24,15 @@ namespace notesAppProject.Controllers
 
         public IActionResult Index()
         {
+            var Username = _sessionHandler.GetSignedInUsername();
+            ViewBag.Username = Username;
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult SignOut()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            HttpContext.Session.Clear();
+            return Redirect("/");
         }
     }
 }
