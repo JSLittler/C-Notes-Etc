@@ -1,15 +1,24 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Bson.IO;
 using notesAppProject.Models;
 using StaticHttpContextAccessor.Helpers;
+using MongoDB.Driver;
+using MongoDB.Driver.Core;
+using MongoDB.Driver.Core.Authentication;
+using Newtonsoft.Json;
 
 namespace notesAppProject.Controllers
 {
     public class UserController : Controller
     {
 
-    private readonly SessionHandler _sessionHandler;
+        private readonly SessionHandler _sessionHandler;
 
         public UserController(SessionHandler sessionHandler)
         {
@@ -20,7 +29,7 @@ namespace notesAppProject.Controllers
         {
             return View();
         }
-    
+
         public IActionResult SignIn(string username, string password)
         {
             var connectionString = "mongodb://localhost:27017";
@@ -28,60 +37,73 @@ namespace notesAppProject.Controllers
 
             var NotesAppDb = client.GetDatabase("NotesAppDb");
             var UserCollection = NotesAppDb.GetCollection<User>("UserCollection");
+            if (UserCollection.Find(User => User.Username == username) == null)
+            {
+                return (IActionResult)(TempData["FlashMessage"] = "Incorrect username"); // this won't work
+            }
+
             var UserAttempt = UserCollection.Find(User => User.Username == username).First();
             var Password = UserAttempt.Password;
 
-            if (User == null || Password != password)
+            if (Password != password)
             {
-                TempData["FlashMessage"] = "Incorrect username or password, do you need to register?";
-                return Redirect("./Index");
+                return (IActionResult)(TempData["FlashMessage"] = "Incorrect password");
             }
-
+            
             _sessionHandler.SetUserSession(UserAttempt.Username);
-
             return Redirect("../NotesApp/Index");
         }
 
         public IActionResult New()
         {
+            string Message = SessionHandler.GetTempMessage(); //not working, need to debug the get and set functions
+            if (!string.IsNullOrEmpty(Message))
+            {
+                Message = "Please enter your personal details and preferences";
+            }
 
+            ViewBag.message = Message;
             return View();
         }
 
         public async Task<IActionResult> Create(string username, string emailAddress, string password, string firstName, string lastName, string streetAddress, string postalTown, string postcode, bool permissionWeatherApp, bool permisssionNewsApp, bool permissionRadioApp)
         {
+            string message = "";
             var connectionString = "mongodb://localhost:27017";
             var client = new MongoClient(connectionString);
 
             var NotesAppDb = client.GetDatabase("NotesAppDb");
             var UserCollection = NotesAppDb.GetCollection<User>("UserCollection");
-            var CheckUserName = UserCollection.Find(U => U.Username == username);
+            
+            var AttemptedUserName = UserCollection.CountDocuments(User => User.Username == username);
 
-            if (CheckUserName != null)
+            if (AttemptedUserName < 1)
             {
-                TempData["FlashMessage"] = "Username already in use";
+                UserCollection.InsertOne(new User
+                {
+                    Username = username,
+                    EmailAddress = emailAddress,
+                    Password = password,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    StreetAddress = streetAddress,
+                    PostalTown = postalTown,
+                    Postcode = postcode,
+                    PermissionWeatherApp = true,
+                    PermissionNewsApp = true,
+                    PermissionRadioApp = true
+                });
+
+                message = "Your details have been save successfully, please sign in to continue."; // //set session variable to this and take viewbag from session variable
+                SessionHandler.SetTempMessage(message);
+                return Redirect("../");
+            }
+            else
+            {
+                message = "Username already exists, please select a different Username."; //set session variable to this and take viewbag from session variable
+                SessionHandler.SetTempMessage(message);
                 return Redirect("./New");
             }
-
-            UserCollection.InsertOne(new User
-            {
-                Username = username,
-                EmailAddress = emailAddress,
-                Password = password,
-                FirstName = firstName,
-                LastName = lastName,
-                StreetAddress = streetAddress,
-                PostalTown = postalTown,
-                Postcode = postcode,
-                PermissionWeatherApp = true,
-                PermissionNewsApp = true,
-                PermissionRadioApp = true
-            });
-
-            return Redirect("../");
-
-
-
         }
 
         //            string encryptedPassword = Encryption.EncryptPassword(password);
