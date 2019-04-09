@@ -22,6 +22,10 @@ namespace notesAppProject.Controllers
 
         public IActionResult Index()
         {
+            var Message = "Sign in or register a new account to proceed.";
+            _sessionHandler.SetTempMessage(Message);
+            ViewBag.message = Message;
+
             return View();
         }
 

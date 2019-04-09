@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
 namespace StaticHttpContextAccessor.Helpers
 {
     public class SessionHandler
     {
-
         public bool UserIsSignedIn()
         {
             return AppContext.Current.Session.GetS("username") != "null";
@@ -21,19 +21,14 @@ namespace StaticHttpContextAccessor.Helpers
             return AppContext.Current.Session.GetS("username");
         }
 
-        public static void SetTempMessage(string message)
+        public void SetTempMessage(string message)
         {
-            AppContext.Current.Session.SetString("message", message);
+            AppContext.Current.Session.SetS("message", message);
         }
 
-        public static string GetTempMessage()
+        public string GetTempMessage()
         {
             return AppContext.Current.Session.GetS("message");
         }
-
-        //        public int GetSignedInUserID()
-        //        {
-        //            return AppContext.Current.Session.GetInt("userID") ?? default(int);
-        //        }
     }
 }

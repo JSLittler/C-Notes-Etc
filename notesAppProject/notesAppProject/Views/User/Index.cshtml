@@ -5,9 +5,10 @@
 
 <div class="text-center">
     <h1>Sign In</h1>
+    
+    <h3>@ViewBag.message</h3>
 
     <hr />
-
     <form action="SignIn" method="post">
         <div class="pt-2 pb-1">
             <input type="text" name="username" required="" autofocus="" placeholder="Username" class="form-control form-input" />
@@ -19,8 +20,6 @@
             <button type="submit" class="btn btn-outline-info form-submit">Sign In</button>
         </div>
     </form>
-
-    @ViewBag.Message
 
 </div>
 

@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using MongoDB.Bson.IO;
 using notesAppProject.Models;
 using StaticHttpContextAccessor.Helpers;
 using MongoDB.Driver;
-using MongoDB.Driver.Core;
-using MongoDB.Driver.Core.Authentication;
-using Newtonsoft.Json;
 
 namespace notesAppProject.Controllers
 {
@@ -27,37 +19,67 @@ namespace notesAppProject.Controllers
 
         public IActionResult Index()
         {
+            string Message = _sessionHandler.GetTempMessage();
+
+            string FirstMessage = "Sign in or register a new account to proceed.";
+            string RegisterMessage = "Please enter your personal details and preferences";
+            string SignInMessage = "Enter your Username and Password to sign in.";
+            string WrongUsernameMessage = "Incorrect Username";
+            string WrongPasswordMessage = "Incorrect Password";
+
+            if (Message == FirstMessage)
+            {
+                Message = SignInMessage;
+            }
+
+            var SignInMessageCheck = Message == SignInMessage;
+            var WrongUsernameMessageCheck = Message == WrongUsernameMessage;
+            var WrongPasswordMessageCheck = Message == WrongPasswordMessage;
+
+            if (!SignInMessageCheck && !WrongUsernameMessageCheck && !WrongPasswordMessageCheck)
+            {
+                Message = RegisterMessage;
+            }
+
+            ViewBag.message = Message;
+
             return View();
         }
 
-        public IActionResult SignIn(string username, string password)
-        {
+        public async Task<IActionResult> SignIn(string username, string password)
+        { 
             var connectionString = "mongodb://localhost:27017";
             var client = new MongoClient(connectionString);
-
             var NotesAppDb = client.GetDatabase("NotesAppDb");
             var UserCollection = NotesAppDb.GetCollection<User>("UserCollection");
-            if (UserCollection.Find(User => User.Username == username) == null)
-            {
-                return (IActionResult)(TempData["FlashMessage"] = "Incorrect username"); // this won't work
-            }
 
-            var UserAttempt = UserCollection.Find(User => User.Username == username).First();
-            var Password = UserAttempt.Password;
+            var AttemptedUserCount = UserCollection.CountDocuments(User => User.Username == username);
 
-            if (Password != password)
+            if (AttemptedUserCount < 1)
             {
-                return (IActionResult)(TempData["FlashMessage"] = "Incorrect password");
+                _sessionHandler.SetTempMessage("Incorrect Username");
+
+                return Redirect("./Index");
             }
             
-            _sessionHandler.SetUserSession(UserAttempt.Username);
+            var AttemptedUser = UserCollection.Find(User => User.Username == username).First();
+            var EncryptedPassword = Encryption.EncryptPassword(password);
+
+            if (AttemptedUser.Password != EncryptedPassword)
+            {
+                _sessionHandler.SetTempMessage("Incorrect Password");
+
+                return Redirect("./Index");
+            }
+            
+            _sessionHandler.SetUserSession(AttemptedUser.Username);
             return Redirect("../NotesApp/Index");
         }
 
         public IActionResult New()
         {
-            string Message = SessionHandler.GetTempMessage(); //not working, need to debug the get and set functions
-            if (!string.IsNullOrEmpty(Message))
+            string Message = _sessionHandler.GetTempMessage();
+            if (Message != "Username already exists, please select a different Username.")
             {
                 Message = "Please enter your personal details and preferences";
             }
@@ -76,6 +98,7 @@ namespace notesAppProject.Controllers
             var UserCollection = NotesAppDb.GetCollection<User>("UserCollection");
             
             var AttemptedUserName = UserCollection.CountDocuments(User => User.Username == username);
+            var EncryptedPassword = Encryption.EncryptPassword(password);
 
             if (AttemptedUserName < 1)
             {
@@ -83,7 +106,7 @@ namespace notesAppProject.Controllers
                 {
                     Username = username,
                     EmailAddress = emailAddress,
-                    Password = password,
+                    Password = EncryptedPassword,
                     FirstName = firstName,
                     LastName = lastName,
                     StreetAddress = streetAddress,
@@ -95,19 +118,15 @@ namespace notesAppProject.Controllers
                 });
 
                 message = "Your details have been save successfully, please sign in to continue."; // //set session variable to this and take viewbag from session variable
-                SessionHandler.SetTempMessage(message);
+                _sessionHandler.SetTempMessage(message);
                 return Redirect("../");
             }
             else
             {
                 message = "Username already exists, please select a different Username."; //set session variable to this and take viewbag from session variable
-                SessionHandler.SetTempMessage(message);
+                _sessionHandler.SetTempMessage(message);
                 return Redirect("./New");
             }
         }
-
-        //            string encryptedPassword = Encryption.EncryptPassword(password);
-        //            User newUser = Models.User.CreateNewUser(NotesAppContext, username, encryptedPassword);
-        //            _sessionHandler.SetUserSession(newUser.username, newUser.id);
     }
 }
