@@ -49,14 +49,14 @@ namespace notesAppProject.Controllers
 
         public async Task<IActionResult> SignIn(string username, string password)
         {
-            var AttemptedUser = _dbConnection.FindExistingUser(username);
-            var EncryptedPassword = Encryption.EncryptPassword(password);
-
             if (!_dbConnection.UserExists(username))
             {
                 _sessionHandler.SetTempMessage("Incorrect Username");
                 return Redirect("./Index");
             }
+
+            var AttemptedUser = _dbConnection.FindExistingUser(username);
+            var EncryptedPassword = Encryption.EncryptPassword(password);
 
             if (AttemptedUser.Password != EncryptedPassword)
             {
