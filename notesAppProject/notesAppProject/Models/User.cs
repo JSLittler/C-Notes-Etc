@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System.Runtime.InteropServices.ComTypes;
+using MongoDB.Bson;
 
 namespace notesAppProject.Models
 {
@@ -16,5 +17,25 @@ namespace notesAppProject.Models
         public bool PermissionWeatherApp { get; set; }
         public bool PermissionNewsApp { get; set; }
         public bool PermissionRadioApp { get; set; }
+
+
+        public User CreateUser(string username, string emailAddress, string password, string firstName, string lastName, string streetAddress, string postalTown, string postcode)
+        {
+            var User = new User
+            {
+                Username = username,
+                EmailAddress = emailAddress,
+                Password = password,
+                FirstName = firstName,
+                LastName = lastName,
+                StreetAddress = streetAddress,
+                PostalTown = postalTown,
+                Postcode = postcode,
+                PermissionWeatherApp = true,
+                PermissionNewsApp = true,
+                PermissionRadioApp = true
+            };
+            return User;
+        }
     }
 }
