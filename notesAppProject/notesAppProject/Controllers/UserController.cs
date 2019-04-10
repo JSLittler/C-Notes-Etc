@@ -7,22 +7,19 @@ namespace notesAppProject.Controllers
 {
     public class UserController : Controller
     {
-
-        private readonly SessionHandler _sessionHandler;
         private readonly DbConnection _dbConnection;
-        private readonly UserMessage _userMessage;
+        private readonly UserContext _userContext;
 
-        public UserController(SessionHandler sessionHandler)
+        public UserController()
         {
-            _sessionHandler = sessionHandler;
             _dbConnection = new DbConnection();
-            _userMessage = new UserMessage(_sessionHandler);
+            _userContext = new UserContext();
         }
 
         public IActionResult Index()
         {
-            _userMessage.UserIndexMessage();
-            ViewBag.message = _sessionHandler.GetTempMessage();
+            _userContext.UserIndexMessage();
+            ViewBag.message = _userContext.GetVisibleMessage();
             return View();
         }
 
@@ -30,7 +27,7 @@ namespace notesAppProject.Controllers
         {
             if (!_dbConnection.UserExists(username))
             {
-                _sessionHandler.SetTempMessage("Incorrect Username");
+                _userContext.UserSignInResultMessage(true);
                 return Redirect("./Index");
             }
 
@@ -39,16 +36,18 @@ namespace notesAppProject.Controllers
 
             if (AttemptedUser.Password != EncryptedPassword)
             {
+                _userContext.UserSignInResultMessage(true);
                 return Redirect("./Index");
             }
 
-            _sessionHandler.SetUserSession(AttemptedUser.Username);
+            _userContext.UserSignInResultMessage(false);
+            _userContext.SetUserSession(AttemptedUser.Username);
             return Redirect("../NotesApp/Index");
         }
 
         public IActionResult New()
         {
-            ViewBag.message = _sessionHandler.GetTempMessage();
+            ViewBag.message = _userContext.GetVisibleMessage();
             return View();
         }
 
@@ -61,11 +60,11 @@ namespace notesAppProject.Controllers
             {
                 var NewUser = new User().CreateUser(username, emailAddress, EncryptedPassword, firstName, lastName, streetAddress, postalTown, postcode);
                 _dbConnection.AddUser(NewUser);
-                _userMessage.UserCreateMessage(false);
+                _userContext.UserCreateMessage(false);
                 return Redirect("../");
             }
 
-            _userMessage.UserCreateMessage(true);
+            _userContext.UserCreateMessage(true);
             return Redirect("./New");
         }
     }

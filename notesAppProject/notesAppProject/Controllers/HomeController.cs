@@ -11,27 +11,19 @@ namespace notesAppProject.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly notesAppProject _context;
-        private readonly SessionHandler _sessionHandler;
+        private readonly HomeContext _homeContext;
 
-        public HomeController(SessionHandler sessionHandler)
+        public HomeController()
         {
-            //_context = context;
-            _sessionHandler = sessionHandler;
+            _homeContext = new HomeContext();
         }
 
         public IActionResult Index()
         {
-            _sessionHandler.SetTempMessage("Sign in or register a new account to proceed.");
-            ViewBag.message = _sessionHandler.GetTempMessage();
+            _homeContext.HomeIndexMessage();
+            ViewBag.message = _homeContext.GetVisibleMessage();
 
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
