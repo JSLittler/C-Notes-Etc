@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using notesAppProject.Models;
-using StaticHttpContextAccessor.Helpers;
 
 namespace notesAppProject.Controllers
 {
@@ -47,6 +46,7 @@ namespace notesAppProject.Controllers
 
         public IActionResult New()
         {
+            _userContext.UserNewMessage();
             ViewBag.message = _userContext.GetVisibleMessage();
             return View();
         }

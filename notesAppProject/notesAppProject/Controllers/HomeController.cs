@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using notesAppProject.Models;
-using StaticHttpContextAccessor.Helpers;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace notesAppProject.Controllers
 {
